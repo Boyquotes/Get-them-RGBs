@@ -1,0 +1,32 @@
+[gd_scene load_steps=6 format=3 uid="uid://bhm5rxl1fibae"]
+
+[ext_resource type="Script" path="res://Enemy.gd" id="1_k1sd5"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_eapq3"]
+
+[sub_resource type="Gradient" id="Gradient_xfaty"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.129032, 0.709677)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_v7sg4"]
+gradient = SubResource("Gradient_xfaty")
+width = 256
+height = 256
+fill_from = Vector2(0.220183, 0.243119)
+fill_to = Vector2(0.577982, 0.46789)
+repeat = 1
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hfnhm"]
+
+[node name="Enemy" type="RigidBody2D" groups=["enemies"]]
+gravity_scale = 0.0
+script = ExtResource("1_k1sd5")
+
+[node name="MeshInstance2D2" type="MeshInstance2D" parent="."]
+position = Vector2(-4.76837e-07, 2.86102e-06)
+scale = Vector2(20.0227, 20)
+mesh = SubResource("SphereMesh_eapq3")
+texture = SubResource("GradientTexture2D_v7sg4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_hfnhm")

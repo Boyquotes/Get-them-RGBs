@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://dqa62slk1dvnl"]
+
+[ext_resource type="Script" path="res://Object.gd" id="1_bq2a3"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_3lhve"]
+
+[sub_resource type="Gradient" id="Gradient_lrk83"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0.977778, 1)
+colors = PackedColorArray(0, 1, 0.116667, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_3pn8q"]
+resource_local_to_scene = true
+gradient = SubResource("Gradient_lrk83")
+
+[sub_resource type="CanvasTexture" id="CanvasTexture_x0ife"]
+resource_local_to_scene = true
+diffuse_texture = SubResource("GradientTexture1D_3pn8q")
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lhvpu"]
+
+[node name="Object" type="StaticBody2D" groups=["objects"]]
+collision_mask = 0
+script = ExtResource("1_bq2a3")
+metadata/_edit_group_ = true
+
+[node name="SpawnTime" type="Timer" parent="."]
+wait_time = 0.75
+one_shot = true
+autostart = true
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+position = Vector2(1.19885e-07, 2.86102e-06)
+scale = Vector2(20.0227, 20)
+mesh = SubResource("SphereMesh_3lhve")
+texture = SubResource("CanvasTexture_x0ife")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_lhvpu")

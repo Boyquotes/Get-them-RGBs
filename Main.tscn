@@ -1,0 +1,136 @@
+[gd_scene load_steps=14 format=3 uid="uid://b65iy50xi2btb"]
+
+[ext_resource type="Script" path="res://Main.gd" id="1_60m71"]
+[ext_resource type="PackedScene" uid="uid://dqa62slk1dvnl" path="res://Object.tscn" id="2_5d4jq"]
+[ext_resource type="PackedScene" uid="uid://ce073d8mgef6l" path="res://Player.tscn" id="2_icgoa"]
+[ext_resource type="PackedScene" uid="uid://bhm5rxl1fibae" path="res://Enemy.tscn" id="4_hpulq"]
+[ext_resource type="AudioStream" uid="uid://cs6ev5aoabeeq" path="res://Art/game-over.mp3" id="5_rtjv3"]
+[ext_resource type="AudioStream" uid="uid://b1hhce1l5cj3r" path="res://Art/correct_touch.mp3" id="6_ret6g"]
+[ext_resource type="AudioStream" uid="uid://1rheujo015fn" path="res://Art/alarm.mp3" id="7_xsbos"]
+[ext_resource type="AudioStream" uid="uid://byythd7dcuxy6" path="res://Art/signal-alert.mp3" id="8_3p8t6"]
+
+[sub_resource type="InputEventKey" id="InputEventKey_0145d"]
+device = -1
+keycode = 4194309
+
+[sub_resource type="InputEventKey" id="InputEventKey_vg5vo"]
+device = -1
+keycode = 32
+unicode = 32
+
+[sub_resource type="Shortcut" id="Shortcut_30o8l"]
+events = [SubResource("InputEventKey_0145d"), SubResource("InputEventKey_vg5vo")]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_vw3n4"]
+bg_color = Color(0, 0, 0, 0.431373)
+
+[sub_resource type="Curve2D" id="Curve2D_d0m0q"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, -16, -16, 0, 0, 0, 0, 520, -16, 0, 0, 0, 0, 520, 520, 0, 0, 0, 0, -16, 520, 0, 0, 0, 0, -16, -16)
+}
+point_count = 5
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_60m71")
+object_scene = ExtResource("2_5d4jq")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 500.0
+offset_bottom = 500.0
+color = Color(0.294118, 0.294118, 0.294118, 1)
+
+[node name="Player" parent="." instance=ExtResource("2_icgoa")]
+position = Vector2(-32, -8)
+
+[node name="Enemy" parent="." instance=ExtResource("4_hpulq")]
+position = Vector2(-32, 16)
+
+[node name="HUD" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 500.0
+offset_bottom = 500.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Text" type="Label" parent="HUD"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -133.0
+offset_top = -70.0
+offset_right = 133.0
+offset_bottom = -22.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Get them RGBs!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StartGame" type="Button" parent="HUD"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = 30.0
+offset_right = 48.0
+offset_bottom = 61.0
+grow_horizontal = 2
+grow_vertical = 2
+shortcut = SubResource("Shortcut_30o8l")
+text = "Start Game
+"
+
+[node name="ScoreLabel" type="Label" parent="HUD"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -55.0
+offset_right = 55.0
+offset_bottom = 40.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_vw3n4")
+text = "Score: 0"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Sound" type="Node" parent="."]
+
+[node name="GameOverSound" type="AudioStreamPlayer2D" parent="Sound"]
+stream = ExtResource("5_rtjv3")
+pitch_scale = 0.74
+
+[node name="CorrTouchSound" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource("6_ret6g")
+
+[node name="AlertSoundOOB" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource("7_xsbos")
+
+[node name="AlertSound" type="AudioStreamPlayer" parent="Sound"]
+stream = ExtResource("8_3p8t6")
+pitch_scale = 0.96
+
+[node name="OOBTimer" type="Timer" parent="."]
+wait_time = 4.0
+one_shot = true
+
+[node name="EnemyPath" type="Path2D" parent="."]
+curve = SubResource("Curve2D_d0m0q")
+
+[node name="EnemySpawnLocation" type="PathFollow2D" parent="EnemyPath"]
+position = Vector2(-16, -16)
+
+[connection signal="body_entered" from="Player" to="." method="_on_player_body_entered" flags=3]
+[connection signal="pressed" from="HUD/StartGame" to="." method="_on_start_game_pressed"]
+[connection signal="timeout" from="OOBTimer" to="." method="_on_oob_timer_timeout"]
